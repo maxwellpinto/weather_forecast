@@ -27,13 +27,13 @@ Pré requisitos
 
 Setup Docker
 ------------------------------
-Abra o terminal de comando na raiz do projeto (no local onde estão os arquivos WeatherForecast.sln e o docker-compose.yaml), sem seguida execute a seguinte linha de comando :
+Abra o terminal de comando na raiz do projeto (no local onde estão os arquivos WeatherForecast.sln e o docker-compose.yaml), em seguida, execute a seguinte linha de comando :
 
 ~~~PowerShell
 docker-compose up --build
 ~~~
 
-Aguarde a executação do procedimento, a primeira execução deve demorar alguns segundos. Após subir todos os serviços, teramos um resultado semelhante ao seguinte :
+Aguarde a executação do procedimento, a primeira execução deve demorar alguns segundos. Após subir todos os serviços, teremos um resultado semelhante ao exibido abaixo :
 
 ~~~PowerShell
 rabbitmq_1                 | 2020-01-20 07:56:04.201 [info] <0.618.0> connection <0.618.0> (172.19.0.3:56762 -> 172.19.0.2:5672): user 'guest' authenticated and granted access to vhost '/'
@@ -55,10 +55,12 @@ manage_weather_forecast_1  | info: Microsoft.Hosting.Lifetime[0]
 manage_weather_forecast_1  |       Content root path: /app
 ~~~
 
-Em seguida, basta abrir o Postman e realizar as chamadas. Em ambos os casos, o verbo utilizando é o GET, seguem as URLss: 
+Em seguida, basta abrir o Postman e realizar as chamadas. Em ambos os casos, o verbo utilizando é o GET. 
+
+URLs: 
 
  - http://localhost:10005/api/WeatherManager/blumenau/br -> API de consulta e cadastro de previsão do tempo
- - http://localhost:10005/api/WeatherManager/blumenau/br -> API que retorna o resultado da pesquisa em banco de dados
+ - http://localhost:10005/api/WeatherManager/All -> API que retorna o resultado da pesquisa em banco de dados
 
 A todo momento, os registros e o log dos eventos criados e consumidos são escrito no terminal. Além disso, você pode executar o Console Application contido na Solution, para realizar uma rajada de cinco testes seguidos.
 
