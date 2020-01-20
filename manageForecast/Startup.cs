@@ -35,8 +35,7 @@ namespace manageForecast
 
             services.AddSingleton(rabbitMQConfigurations);
             services.AddSingleton<IMessageService, MessageService>();
-            services.AddSingleton(new WeatherRepository(new ManagerWeatherContext()));
-            services.AddSingleton<IWeatherRepository, WeatherRepository>();
+            services.AddSingleton(new WeatherRepository(new ManagerWeatherContext()));            
             services.AddControllers();
         }
 

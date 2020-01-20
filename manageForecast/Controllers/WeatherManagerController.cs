@@ -12,8 +12,8 @@ namespace manageForecast.Controllers
     public class WeatherManagerController : ControllerBase
     {        
         private readonly IMessageService _messageService;
-        private readonly IWeatherRepository _repository;
-        public WeatherManagerController(IMessageService messageService, IWeatherRepository repository)
+        private readonly WeatherRepository _repository;
+        public WeatherManagerController(IMessageService messageService, WeatherRepository repository)
         {            
             _messageService = messageService;
             _repository = repository;

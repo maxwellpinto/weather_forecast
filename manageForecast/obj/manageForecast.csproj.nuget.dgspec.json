@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Maxwell\\Projetos\\WeatherForecast\\manageForecast\\manageForecast.csproj": {}
+    "D:\\weather_forecast\\manageForecast\\manageForecast.csproj": {}
   },
   "projects": {
-    "D:\\Maxwell\\Projetos\\WeatherForecast\\manageForecast\\manageForecast.csproj": {
+    "D:\\weather_forecast\\manageForecast\\manageForecast.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Maxwell\\Projetos\\WeatherForecast\\manageForecast\\manageForecast.csproj",
+        "projectUniqueName": "D:\\weather_forecast\\manageForecast\\manageForecast.csproj",
         "projectName": "manageForecast",
-        "projectPath": "D:\\Maxwell\\Projetos\\WeatherForecast\\manageForecast\\manageForecast.csproj",
+        "projectPath": "D:\\weather_forecast\\manageForecast\\manageForecast.csproj",
         "packagesPath": "C:\\Users\\Maxwell-PC\\.nuget\\packages\\",
-        "outputPath": "D:\\Maxwell\\Projetos\\WeatherForecast\\manageForecast\\obj\\",
+        "outputPath": "D:\\weather_forecast\\manageForecast\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
