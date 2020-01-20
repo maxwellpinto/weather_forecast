@@ -4,15 +4,22 @@ Esse projeto tem como objetivo contruir dois microserviços para cadastra e cons
 
 ## Projeto manageForecast 
 
-Nesse projeto temos uma API responsável por cadastrar previsões do tempo conforme parametros enviado via Get  ex : http://localhost:10005/api/WeatherManager/blumenau/br
+Projeto responsável por cadastrar previsões do tempo conforme parametros enviado via Get, no seguinte formato : http://localhost:10005/api/WeatherManager/blumenau/br
 
-    - O Parametros recebidos por meio da API são concatenados em uma URL e um evento na fila de "requests" é postado no RabbitMQ.
+    - O Parametros recebidos nessa API são concatenados em uma URL e um evento na fila de "weatherForecastRequest" é postado no RabbitMQ.
 
-Além dessa API, o projeto tem um evento registrado no RabbitMQ com o objeto de escutar previsão do tempo e armazenar essas previsões do tempo é um banco de dados (Nesse exemplo, usamos o SQL Lite).
+Além dessa API, o projeto tem um evento registrado no RabbitMQ com o objeto de escutar o resultado da previsão do tempo que estão na fila "weatherForecastResponse". Após receber essas previsões, o sistema salva os dados em um banco de dados. Para esse projeto, utlizamos o SQLLite..
 
 ## Projeto weatherForecast 
 
-Nesse projeto temos um evento responsável por escutar pedidos de previsão de tempo. Assim que o sistema captura um evento, o mesmo consulta a previsão do tempo do site http://api.openweathermap.org e disponibiliza o retorno em uma fila de resultados.
+Projeto responsável por escutar pedidos de previsão de tempo que estão na fila "weatherForecastRequest". Após capturar o evento, o mesmo consulta a previsão do tempo na API http://api.openweathermap.org e disponibiliza o retorno na fila de resultados "weatherForecastResponse".
+
+## Projeto clientWeatherForecast 
+
+Projeto Console Aplication que tem por objetivo dispara cinco chamadas seguidas para a API de previsão de tempo.
+
+Deverá ser utilizado apenas penas testar as Serviços após a execução dos mesmos.
+
 
 Pré requisitos
 ------------------------------
@@ -20,6 +27,7 @@ Pré requisitos
 - Visual Studio 2019 ou VS Code (https://visualstudio.microsoft.com/pt-br/vs/community/ ou https://code.visualstudio.com/).
 - .Net core 3.0 (https://dotnet.microsoft.com/download/dotnet-core/3.0)
 - Docker and Docker-compose for windows (https://docs.docker.com/docker-for-windows/install/)
+- Serviço do RabbiMQ rodando
 - Clonar o projeto :
     ~~~PowerShell 
           git clone https://github.com/MaxwellAP/weather_forecast 
@@ -62,21 +70,57 @@ URLs:
  - http://localhost:10005/api/WeatherManager/blumenau/br -> API de consulta e cadastro de previsão do tempo
  - http://localhost:10005/api/WeatherManager/All -> API que retorna o resultado da pesquisa em banco de dados
 
-A todo momento, os registros e o log dos eventos criados e consumidos são escrito no terminal. Além disso, você pode executar o Console Application contido na Solution, para realizar uma rajada de cinco testes seguidos.
+Após realizar a chamada na API responsável por consultar a previsão do tempo, um log será gerado no console com as informações de obtidas do RabbitMQ, conforme exemplo : 
+
+~~~PowerShell
+manage_weather_forecast_1  | [ Manager ] Event to Weather request was Published to RabbitMQ
+manage_weather_forecast_1  | [ Manager ]  Weater Forecast was enqueued: blumenau,br
+weather_forecast_1         |  [Weater Forecast] Requets to Weather was received from Rabbit: blumenau,br
+weather_forecast_1         | [Weater Forecast] Retrieving city weather forecast : blumenau,br
+manage_weather_forecast_1  | [ Manager ] Event to Weather request was Published to RabbitMQ
+manage_weather_forecast_1  | [ Manager ]  Weater Forecast was enqueued: blumenau,br
+weather_forecast_1         |  [Weater Forecast] Requets to Weather was received from Rabbit: blumenau,br
+weather_forecast_1         | [Weater Forecast] Retrieving city weather forecast : blumenau,br
+weather_forecast_1         | [Weater Forecast] Event to weater response was published to RabbitMQ
+manage_weather_forecast_1  | [ Manager ] Weather was received from Rabbit: {"coord":{"lon":-49.07,"lat":-26.92},"weather":[{"id":802,"main":"Clouds","description":"scattered clouds","icon":"03d"}],"base":"stations","main":{"temp":302.01,"feels_like":304.11,"temp_min":300.15,"temp_max":303.15,"pressure":1014,"humidity":74},"visibility":10000,"wind":{"speed":5.1,"deg":80},"clouds":{"all":40},"dt":1579534645,"sys":{"type":1,"id":8398,"country":"BR","sunrise":1579509590,"sunset":1579558445},"timezone":-10800,"id":3469968,"name":"Blumenau","cod":200}
+~~~
+
+Em seguida, pode realizar a chamada na API http://localhost:10005/api/WeatherManager/All e verificar a previsão do tempo que foi devidamente registrada na base de dados.
 
 Setup Visual Studio Code
 ------------------------------
 
-Abre o terminal e crie o repositorio docker para executar o RabbitMQ
+caso não tenha uma imagem do RabbitMQ em seu docker, abra o terminal e digite a linha de comando abaixo. Esse comando irá baixar uma menssagem e iniciar a execução do container.
 
 ~~~PowerShell
 docker run -d --hostname rabbitmq --name rabbitmq -p 5672:5672 -p 15672:15672 -p 4369:4369 -p 5671:5671-p 25672:25672 -p 15671:15671-e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest rabbitmq:3-management
 ~~~
 
-Ainda com o terminal aberto, acesse do diretório do projeto /weather_forecast e restaure as dependencias em seus respectivos projetos
+**Obs : Caso já tenha uma imagem e um container RabbitMQ basta inicicar esse serviços, sem a 
+ncessidade de criar um novo container.**
+
+**Obs 1 : Os dados de configuração para conexão com o RabbitMQ estão no arquivos appsettings.json.**
+
+**Obs 2 : A aplicação já está configurada para rodar no Docker ou um ambiente local sem container. A aplicação roconhece o ambiente e configura o Host conforme o ambiente.**
+
+Ainda com o terminal aberto, certifique-se de que todas as dependencias de pacotes externos foram restauradas.
 
 ~~~PowerShell
 dotnet restore
 ~~~
 
-Prescione CRTL + D em seguida escolha o projeto ManagerWeather Launch (web) e execute. O sistema deverá instaciar o projeto web rodanda na porta 10005
+Em seguide digite o comando para iniciar o Visual Studio Code a partir do diretório onde estão os projetos.
+
+~~~PowerShell
+code .
+~~~
+
+
+Já com o VS Code aberto, prescione as teclas CRTL + D para exibir as configurações de Debug. Em seguida, escolha o projeto **ManagerWeather Launch (web)** e execute. O projeto deverá instaciar um serviço WEB, rodanda na porta 10005.
+
+Em seguida, execute o mesmo procedimento para o serviço **WeatherForecast Launch (web)**. O projeto deverá instanciar um serviço WEB, rodando na porta 10000.
+
+Pronto!! Basta executar o Console Application 'clientWeatherForecast' ou fazer a chamada via Postman, nas seguintes URLs:
+
+ - http://localhost:10005/api/WeatherManager/blumenau/br -> API de consulta e cadastro de previsão do tempo
+ - http://localhost:10005/api/WeatherManager/All -> API que retorna o resultado da pesquisa em banco de dados
