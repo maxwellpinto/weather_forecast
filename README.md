@@ -1,6 +1,8 @@
 # Microserviços Weather Forecast 
 
-Esse projeto tem como objetivo contruir dois microserviços para cadastra e consumir a previsão do tempo.
+Esse projeto tem o objetivo construir dois microserviços. Sendo um para cadastrar e solicitar previsões de tempo e outro para consumir informações públicas na API http://api.openweathermap.org. Ambos os eventos são registadros em filas.
+
+Por ser tratar de microserviços e acreditar que essas aplicações devem ter seu "ciclo de vida" independente, resolvi utilizar container com Docker. Além do Docker, utilizei também o Docker-compose para facilitar no "gerenciamento" dos trêS containers obtidos na aplicação (Microserviço 1, Microserviço 2 e RabbitMQ).
 
 ## Projeto manageForecast 
 
